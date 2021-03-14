@@ -28,11 +28,14 @@ class _SignUpFormState extends State<SignUpForm> {
   final _firstNameTextController = TextEditingController();
   final _lastNameTextController = TextEditingController();
   final _usernameTextController = TextEditingController();
-
+  final _formKey = GlobalKey<FormState>();
   double _formProgress = 0;
 
-  void _showWelcomeScreen() {
-    Navigator.of(context).pushNamed('/welcome');
+  String? _validateTextField(String text, String? value) {
+    if (value!.isEmpty) {
+      return text;
+    }
+    return null;
   }
 
   void _updateFormProgress() {
@@ -54,9 +57,14 @@ class _SignUpFormState extends State<SignUpForm> {
     });
   }
 
+  void _showWelcomeScreen() {
+    Navigator.of(context).pushNamed('/welcome');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: _formKey,
       onChanged: _updateFormProgress,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -68,6 +76,7 @@ class _SignUpFormState extends State<SignUpForm> {
             child: TextFormField(
               controller: _firstNameTextController,
               decoration: InputDecoration(hintText: 'First name'),
+              validator: (value) { return _validateTextField('Please enter a first name', value); },
             ),
           ),
           Padding(
@@ -75,6 +84,7 @@ class _SignUpFormState extends State<SignUpForm> {
             child: TextFormField(
               controller: _lastNameTextController,
               decoration: InputDecoration(hintText: 'Last name'),
+              validator: (value) { return _validateTextField('Please enter a last name', value); },
             ),
           ),
           Padding(
@@ -82,19 +92,27 @@ class _SignUpFormState extends State<SignUpForm> {
             child: TextFormField(
               controller: _usernameTextController,
               decoration: InputDecoration(hintText: 'Username'),
+              validator: (value) { return _validateTextField('Please enter a username', value); },
             ),
           ),
-          TextButton(
-            style: ButtonStyle(
-              foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                return Colors.white;
-              }),
-              backgroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-                return states.contains(MaterialState.disabled) ? Colors.grey : Colors.blue;
-              }),
+          Padding(
+            padding: EdgeInsets.only(bottom: 5.0),
+            child: TextButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
+                  return Colors.white;
+                }),
+                backgroundColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
+                  return Colors.blue;
+                }),
+              ),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  _showWelcomeScreen();
+                }
+              },
+              child: Text('Sign up'),
             ),
-            onPressed: _formProgress == 1 ? _showWelcomeScreen : null,
-            child: Text('Sign up'),
           ),
         ],
       ),
