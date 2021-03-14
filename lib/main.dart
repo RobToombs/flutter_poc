@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'sign_up/sign_up.dart';
+import 'welcome/welcome.dart';
 
 void main() => runApp(SignUpApp());
 
@@ -10,6 +11,7 @@ class SignUpApp extends StatelessWidget {
     return MaterialApp(
       routes: {
         '/': (context) => SignUpScreen(),
+        '/welcome': (context) => WelcomeScreen(),
       },
     );
   }
