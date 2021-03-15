@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_poc/helpers/view_helpers.dart';
 
 // stores ExpansionPanel state information
 class Item {
@@ -27,8 +28,10 @@ class AppointmentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: AppointmentList(),
-      ),
+          child: Column(children: [
+        createTitleRow(),
+        AppointmentList(),
+      ])),
     );
   }
 }
@@ -41,7 +44,7 @@ class AppointmentList extends StatefulWidget {
 }
 
 class _AppointmentListState extends State<AppointmentList> {
-  final List<Item> _data = generateItems(15);
+  final List<Item> _data = generateItems(10);
 
   @override
   Widget build(BuildContext context) {
@@ -62,14 +65,21 @@ class _AppointmentListState extends State<AppointmentList> {
       children: _data.map<ExpansionPanel>((Item item) {
         return ExpansionPanel(
           headerBuilder: (BuildContext context, bool isExpanded) {
-            return ListTile(
-              title: Text(item.headerValue),
-            );
+            return Row(children: <Widget>[
+              centeredText('Toombs'),
+              centeredText('Rob'),
+              centeredText('2/3/1990'),
+              centeredText('MRN1235'),
+              centeredText('3/17/2021'),
+              centeredText('10:30 AM'),
+              centeredText('Dr. Pants Man'),
+              centeredText('3/15/2021 @ 9:30 AM'),
+            ]);
           },
           body: ListTile(
               title: Text(item.expandedValue),
               subtitle:
-              const Text('To delete this panel, tap the trash can icon'),
+                  const Text('To delete this panel, tap the trash can icon'),
               trailing: const Icon(Icons.delete),
               onTap: () {
                 setState(() {
