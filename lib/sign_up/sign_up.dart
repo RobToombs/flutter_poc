@@ -58,7 +58,7 @@ class _SignUpFormState extends State<SignUpForm> {
   }
 
   void _showWelcomeScreen() {
-    Navigator.of(context).pushNamed('/welcome');
+    Navigator.of(context).pushNamed('/appointments');
   }
 
   @override
