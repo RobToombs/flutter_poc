@@ -1,27 +1,41 @@
 import 'package:flutter/material.dart';
 
-FractionallySizedBox createTitleRow() {
-  return FractionallySizedBox(
-      widthFactor: 0.9,
-      child: Row(
-        children: [
-          centeredText('Last Name'),
-          centeredText('First Name'),
-          centeredText('DOB'),
-          centeredText('MRN'),
-          centeredText('Date'),
-          centeredText('Time'),
-          centeredText('Clinician'),
-          centeredText('Last Saved'),
-        ],
-  ));
+IgnorePointer createTitleRow() {
+  return IgnorePointer(
+      child: ExpansionTile (
+        tilePadding: const EdgeInsets.only(right: 20.0),
+        title:
+          Row(
+              children: <Widget>[
+                centeredBoldText('Last Name'),
+                centeredBoldText('First Name'),
+                centeredBoldText('DOB'),
+                centeredBoldText('MRN'),
+                centeredBoldText('Date'),
+                centeredBoldText('Time'),
+                centeredBoldText('Clinician'),
+                centeredBoldText('Last Saved'),
+              ],
+            ),
+        trailing: SizedBox.shrink()
+     )
+   );
 }
 
-Expanded centeredText(String text) {
+Expanded centeredBoldText(String text) {
+  return centeredText(text, TextStyle(fontWeight: FontWeight.bold));
+}
+
+Expanded centeredNormalText(String text) {
+  return centeredText(text, null);
+}
+
+Expanded centeredText(String text, TextStyle? _style) {
   return Expanded(
     child: Text(
       text,
       textAlign: TextAlign.center,
+      style: _style,
     ),
   );
 }

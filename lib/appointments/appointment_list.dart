@@ -6,12 +6,12 @@ class Item {
   Item({
     required this.expandedValue,
     required this.headerValue,
-    this.isExpanded = false,
+    required this.id,
   });
 
   String expandedValue;
   String headerValue;
-  bool isExpanded;
+  int id;
 }
 
 List<Item> generateItems(int numberOfItems) {
@@ -19,6 +19,7 @@ List<Item> generateItems(int numberOfItems) {
     return Item(
       headerValue: 'Panel $index',
       expandedValue: 'This is item number $index',
+      id: index
     );
   });
 }
@@ -29,8 +30,8 @@ class AppointmentScreen extends StatelessWidget {
     return Scaffold(
       body: Center(
           child: Column(children: [
-        createTitleRow(),
-        AppointmentList(),
+              createTitleRow(),
+              AppointmentList(),
       ])),
     );
   }
@@ -56,24 +57,20 @@ class _AppointmentListState extends State<AppointmentList> {
   }
 
   Widget _buildPanel() {
-    return ExpansionPanelList(
-      expansionCallback: (int index, bool isExpanded) {
-        setState(() {
-          _data[index].isExpanded = !isExpanded;
-        });
-      },
-      children: _data.map<ExpansionPanel>((Item item) {
-        return ExpansionPanel(
+    return ExpansionPanelList.radio(
+      expansionCallback: (int index, bool isExpanded) {},
+      children: _data.map<ExpansionPanelRadio>((Item item) {
+        return ExpansionPanelRadio(
           headerBuilder: (BuildContext context, bool isExpanded) {
             return Row(children: <Widget>[
-              centeredText('Toombs'),
-              centeredText('Rob'),
-              centeredText('2/3/1990'),
-              centeredText('MRN1235'),
-              centeredText('3/17/2021'),
-              centeredText('10:30 AM'),
-              centeredText('Dr. Pants Man'),
-              centeredText('3/15/2021 @ 9:30 AM'),
+              centeredNormalText('Toombs'),
+              centeredNormalText('Rob'),
+              centeredNormalText('2/3/1990'),
+              centeredNormalText('MRN1235'),
+              centeredNormalText('3/17/2021'),
+              centeredNormalText('10:30 AM'),
+              centeredNormalText('Dr. Pants Man'),
+              centeredNormalText('3/15/2021 @ 9:30 AM'),
             ]);
           },
           body: ListTile(
@@ -86,7 +83,8 @@ class _AppointmentListState extends State<AppointmentList> {
                   _data.removeWhere((Item currentItem) => item == currentItem);
                 });
               }),
-          isExpanded: item.isExpanded,
+          canTapOnHeader: true,
+          value: item.id,
         );
       }).toList(),
     );
