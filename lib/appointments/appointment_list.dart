@@ -48,7 +48,7 @@ class _AppointmentListState extends State<AppointmentList> {
           return Text("${snapshot.error}");
         }
 
-        // By default, show a loading spinner.
+        // By default, let's show a loading spinner.
         return CircularProgressIndicator();
       }
     );

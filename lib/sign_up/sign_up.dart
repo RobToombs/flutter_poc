@@ -57,7 +57,7 @@ class _SignUpFormState extends State<SignUpForm> {
     });
   }
 
-  void _showWelcomeScreen() {
+  void _navigateToAppointments() {
     Navigator.of(context).pushNamed('/appointments');
   }
 
@@ -108,7 +108,7 @@ class _SignUpFormState extends State<SignUpForm> {
               ),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  _showWelcomeScreen();
+                  _navigateToAppointments();
                 }
               },
               child: Text('Sign up'),
