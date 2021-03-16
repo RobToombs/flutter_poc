@@ -1,28 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_poc/helpers/view_helpers.dart';
+import 'package:http/http.dart' as http;
 
-// stores ExpansionPanel state information
-class Item {
-  Item({
-    required this.expandedValue,
-    required this.headerValue,
-    required this.id,
-  });
-
-  String expandedValue;
-  String headerValue;
-  int id;
-}
-
-List<Item> generateItems(int numberOfItems) {
-  return List.generate(numberOfItems, (int index) {
-    return Item(
-      headerValue: 'Panel $index',
-      expandedValue: 'This is item number $index',
-      id: index
-    );
-  });
-}
+import 'models.dart';
 
 class AppointmentScreen extends StatelessWidget {
   @override
@@ -45,7 +27,7 @@ class AppointmentList extends StatefulWidget {
 }
 
 class _AppointmentListState extends State<AppointmentList> {
-  final List<Item> _data = generateItems(10);
+  late Future<List<Appointment>> _futureAppointments;
 
   @override
   Widget build(BuildContext context) {
@@ -57,36 +39,71 @@ class _AppointmentListState extends State<AppointmentList> {
   }
 
   Widget _buildPanel() {
+    return FutureBuilder<List<Appointment>> (
+      future: _futureAppointments,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return _appointmentPanelList(snapshot.data!);
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+
+        // By default, show a loading spinner.
+        return CircularProgressIndicator();
+      }
+    );
+  }
+
+  ExpansionPanelList _appointmentPanelList(List<Appointment> appointments) {
     return ExpansionPanelList.radio(
       expansionCallback: (int index, bool isExpanded) {},
-      children: _data.map<ExpansionPanelRadio>((Item item) {
+      children: appointments.map<ExpansionPanelRadio>((Appointment appt) {
         return ExpansionPanelRadio(
           headerBuilder: (BuildContext context, bool isExpanded) {
             return Row(children: <Widget>[
-              centeredNormalText('Toombs'),
-              centeredNormalText('Rob'),
-              centeredNormalText('2/3/1990'),
-              centeredNormalText('MRN1235'),
-              centeredNormalText('3/17/2021'),
-              centeredNormalText('10:30 AM'),
-              centeredNormalText('Dr. Pants Man'),
-              centeredNormalText('3/15/2021 @ 9:30 AM'),
+              centeredNormalText(appt.lastName),
+              centeredNormalText(appt.firstName),
+              centeredNormalText(appt.dob),
+              centeredNormalText(appt.mrn),
+              centeredNormalText(appt.date),
+              centeredNormalText(appt.time),
+              centeredNormalText(appt.clinician),
+              centeredNormalText(appt.lastSaved),
             ]);
           },
           body: ListTile(
-              title: Text(item.expandedValue),
+              title: Text(appt.firstName),
               subtitle:
-                  const Text('To delete this panel, tap the trash can icon'),
+              const Text('Delete this appointment.'),
               trailing: const Icon(Icons.delete),
               onTap: () {
                 setState(() {
-                  _data.removeWhere((Item currentItem) => item == currentItem);
+                  appointments.removeWhere((Appointment currentAppt) => appt == currentAppt);
                 });
               }),
           canTapOnHeader: true,
-          value: item.id,
+          value: appt.id,
         );
       }).toList(),
     );
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _futureAppointments = _fetchAppointments();
+  }
+
+  Future<List<Appointment>> _fetchAppointments() async {
+    http.Response response = await http.get(Uri.http('localhost:8080', 'appointments'));
+
+    if (response.statusCode == 200) {
+      return (jsonDecode(response.body) as List)
+                .map((appt) => Appointment.fromJson(appt))
+                .toList();
+    } else {
+      throw Exception('Failed to load appointments');
+    }
+  }
+
 }
