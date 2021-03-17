@@ -64,6 +64,7 @@ class _LoginFormState extends State<LoginForm> {
             child: TextFormField(
               controller: _passwordTextController,
               decoration: InputDecoration(hintText: 'Password'),
+              obscureText: true,
               validator: (value) { return _validateTextField('Please enter your password', value); },
             ),
           ),

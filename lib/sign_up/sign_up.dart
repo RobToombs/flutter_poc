@@ -28,8 +28,21 @@ class _SignUpFormState extends State<SignUpForm> {
   final _firstNameTextController = TextEditingController();
   final _lastNameTextController = TextEditingController();
   final _usernameTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
+  final _confirmPasswordTextController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   double _formProgress = 0;
+
+  String? _validatePassword(String text, String? value, String passwordToMatch) {
+    if (value!.isEmpty) {
+      return text;
+    }
+    else if(value != passwordToMatch) {
+      return "Passwords don't match";
+    }
+
+    return null;
+  }
 
   String? _validateTextField(String text, String? value) {
     if (value!.isEmpty) {
@@ -43,7 +56,9 @@ class _SignUpFormState extends State<SignUpForm> {
     var controllers = [
       _firstNameTextController,
       _lastNameTextController,
-      _usernameTextController
+      _usernameTextController,
+      _passwordTextController,
+      _confirmPasswordTextController,
     ];
 
     for (var controller in controllers) {
@@ -93,6 +108,24 @@ class _SignUpFormState extends State<SignUpForm> {
               controller: _usernameTextController,
               decoration: InputDecoration(hintText: 'Username'),
               validator: (value) { return _validateTextField('Please enter a username', value); },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextFormField(
+              controller: _passwordTextController,
+              decoration: InputDecoration(hintText: 'Password'),
+              validator: (value) { return _validatePassword('Please enter a password', value, _confirmPasswordTextController.value.text); },
+              obscureText: true,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextFormField(
+              controller: _confirmPasswordTextController,
+              decoration: InputDecoration(hintText: 'Confirm Password'),
+              validator: (value) { return _validatePassword('Please confirm password', value,_passwordTextController.value.text); },
+              obscureText: true,
             ),
           ),
           Padding(
