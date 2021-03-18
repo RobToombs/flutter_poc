@@ -12,7 +12,7 @@ class AppointmentScreen extends StatelessWidget {
     return Scaffold(
       body: Center(
           child: Column(children: [
-              createTitleRow(),
+              createAppointmentTitleRow(),
               AppointmentList(),
       ])),
     );
@@ -63,27 +63,51 @@ class _AppointmentListState extends State<AppointmentList> {
             return Row(children: <Widget>[
               centeredNormalText(appt.lastName),
               centeredNormalText(appt.firstName),
-              centeredNormalText(appt.dob.toString()),
+              centeredNormalText(formatDate(appt.dob)),
               centeredNormalText(appt.mrn),
-              centeredNormalText(appt.date.toString()),
+              centeredNormalText(formatDateTime(appt.date)),
               centeredNormalText(appt.clinician),
-              centeredNormalText(appt.lastSaved.toString()),
+              centeredNormalText(formatDateTime(appt.lastSaved)),
             ]);
           },
-          body: ListTile(
-              title: Text(appt.firstName),
-              subtitle:
-              const Text('Delete this appointment.'),
-              trailing: const Icon(Icons.delete),
-              onTap: () {
-                setState(() {
-                  appointments.removeWhere((Appointment currentAppt) => appt == currentAppt);
-                });
-              }),
+          body: _buildMedications(appointments, appt),
           canTapOnHeader: true,
           value: appt.id,
         );
       }).toList(),
+    );
+  }
+
+  Widget _buildMedications(List<Appointment> appts, Appointment appt) {
+
+    ListTile removeAppt =
+      ListTile(
+          title: Text('Delete this appointment.'),
+          trailing: Icon(Icons.delete),
+          onTap: () {
+            setState(() {
+              appts.removeWhere((Appointment currentAppt) => appt == currentAppt);
+            });
+          }
+      );
+
+    List<Row> medications =
+      appt.medications.map<Row>((Medication med) {
+        return Row(
+            children: <Widget>[
+              centeredNormalText(med.name),
+              centeredNormalText(formatDate(med.firstFill)),
+              centeredNormalText(med.copay.toString()),
+              centeredNormalText(med.days.toString()),
+            ]);
+      }).toList();
+
+    List<Widget> content = [ createMedicationTitleRow() ];
+    content.addAll(medications);
+    content.add(removeAppt);
+
+    return Column(
+      children: content,
     );
   }
 
