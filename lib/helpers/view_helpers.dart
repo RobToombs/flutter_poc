@@ -13,7 +13,6 @@ IgnorePointer createTitleRow() {
                 centeredBoldText('DOB'),
                 centeredBoldText('MRN'),
                 centeredBoldText('Date'),
-                centeredBoldText('Time'),
                 centeredBoldText('Clinician'),
                 centeredBoldText('Last Saved'),
               ],

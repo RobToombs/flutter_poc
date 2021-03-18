@@ -63,12 +63,11 @@ class _AppointmentListState extends State<AppointmentList> {
             return Row(children: <Widget>[
               centeredNormalText(appt.lastName),
               centeredNormalText(appt.firstName),
-              centeredNormalText(appt.dob),
+              centeredNormalText(appt.dob.toString()),
               centeredNormalText(appt.mrn),
-              centeredNormalText(appt.date),
-              centeredNormalText(appt.time),
+              centeredNormalText(appt.date.toString()),
               centeredNormalText(appt.clinician),
-              centeredNormalText(appt.lastSaved),
+              centeredNormalText(appt.lastSaved.toString()),
             ]);
           },
           body: ListTile(

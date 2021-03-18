@@ -3,12 +3,11 @@ class Appointment {
   int id;
   String lastName;
   String firstName;
-  String dob;
+  DateTime? dob;
   String mrn;
-  String date;
-  String time;
+  DateTime? date;
   String clinician;
-  String lastSaved;
+  DateTime? lastSaved;
   List<Medication> medications;
 
   Appointment({
@@ -18,7 +17,6 @@ class Appointment {
     required this.dob,
     required this.mrn,
     required this.date,
-    required this.time,
     required this.clinician,
     required this.lastSaved,
     required this.medications,
@@ -33,24 +31,25 @@ class Appointment {
       id: json['id'] as int,
       lastName: json['lastName'] as String,
       firstName: json['firstName'] as String,
-      dob: json['dob'] as String,
+      dob: json['dob'] == null ? null : DateTime.parse(json['dob']),
       mrn: json['mrn'] as String,
-      date: json['date'] as String,
-      time: json['time'] as String,
+      date: json['date'] == null ? null : DateTime.parse(json['date']),
       clinician: json['clinician'] as String,
-      lastSaved: json['lastSaved'] as String,
+      lastSaved: json['lastSaved'] == null ? null : DateTime.parse(json['lastSaved']),
       medications: medications,
     );
   }
 }
 
 class Medication {
+  int id;
   String name;
-  String firstFill;
-  String copay;
-  String days;
+  DateTime? firstFill;
+  double copay;
+  int days;
 
   Medication({
+    required this.id,
     required this.name,
     required this.firstFill,
     required this.copay,
@@ -59,10 +58,11 @@ class Medication {
 
   factory Medication.fromJson(Map<String, dynamic> json) {
     return Medication(
+      id: json['id'] as int,
       name: json['name'] as String,
-      firstFill: json['firstFill'] as String,
-      copay: json['copay'] as String,
-      days: json['days'] as String,
+      firstFill: json['firstFill'] == null ? null : DateTime.parse(json['firstFill']),
+      copay: json['copay'] as double,
+      days: json['daysSupply'] as int,
     );
   }
 }
